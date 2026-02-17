@@ -14,12 +14,14 @@
     </form>
     <h2>shortened urls</h2>
     <ul>
-        {% for entry in data %}
-            <li>{{entry.url}} -> <a href="/u/{{ entry.short_url }}">/u//{{ entry.short_url }}</a> </li>
+        {% for entry in data  %}
+            <li>{{entry.url}} -> <a href="/u/{{ entry.slug }}">/u//{{ entry.slug }}</a>
+             </li>
         {% endfor %}
     </ul>
 
     <!-- {% if short_url %}
         <p>Short URL: <a href="{{ short_url }}">{{ short_url }}</a></p>
     {% endif %} -->
+</body>
 </html>

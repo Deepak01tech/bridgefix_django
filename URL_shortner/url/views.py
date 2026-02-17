@@ -17,9 +17,8 @@ def shorten_url(request):
             url = form.cleaned_data['url']
             new_url = Urldata(url=url,slug=slug)
             new_url.save()
-            # short_url = generate_short_url()
-            # Urldata.objects.create(url=url, short_url=short_url)
-            return redirect('/')#(request, 'shorten_url.html', {'form': form, 'short_url': short_url})
+           
+            return redirect('/')#
     else:
         form = UrlForm()
     data= Urldata.objects.all()
@@ -27,7 +26,7 @@ def shorten_url(request):
         'form': form,
         'data': data
     }
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'index.html', context)
 
 def url_redirect(request, slug):
     try:

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Shorten</button>
+    </form>
+    <h2>shortened urls</h2>
+    <ul>
+        {% for entry in data %}
+            <li>{{entry.url}} -> <a href="/u/{{ entry.short_url }}">/u//{{ entry.short_url }}</a> </li>
+        {% endfor %}
+    </ul>
+
+    <!-- {% if short_url %}
+        <p>Short URL: <a href="{{ short_url }}">{{ short_url }}</a></p>
+    {% endif %} -->
+</html>

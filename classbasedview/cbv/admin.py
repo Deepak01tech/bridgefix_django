@@ -1,9 +1,3 @@
 from django.contrib import admin
-from .models import Urldata
-admin.site.register(Urldata)
 
 # Register your models here.
-
-
-
-

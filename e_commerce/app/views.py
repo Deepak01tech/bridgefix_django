@@ -83,15 +83,17 @@ def signup(request):
 # @require_POST
 def user_logout(request):
     logout(request)
-    return JsonResponse({
-        "message": "Logged out successfully",
-        "status": "success"
-    })
+    # return JsonResponse({
+    #     "message": "Logged out successfully",
+    #     "status": "success"
+    # })
+    return redirect("home")  # change 'home' to your home url name
 @login_required
 def product_list(request):
     products = Product.objects.all()
     data = [{"id": p.id, "name": p.name, "description": p.description, "price": str(p.price), "stock": p.stock} for p in products]
-    return JsonResponse(data, safe=False)
+    # return JsonResponse(data, safe=False)
+    return render(request, "product_list.html", {"products": products})
 
 @login_required
 def product_detail(request, pk):

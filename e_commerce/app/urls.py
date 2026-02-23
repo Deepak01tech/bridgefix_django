@@ -18,8 +18,8 @@ urlpatterns = [
     path ('sellers/<int:pk>/add_product/', views.add_product_to_seller, name='add_product_to_seller'),
     path ('sellers/<int:pk>/remove_product/<int:product_id>/', views.remove_product_from_seller, name='remove_product_from_seller'),
     path ('managers/', views.manager_approval, name='manager_approve_products'),
-    path('login/', views.user_login, name='user_login'),
+    path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
-    path('signup/', views.signup, name='user_signup'),
+    path('signup/', views.signup, name='signup'),
     path('', views.home, name='home'),
 ]

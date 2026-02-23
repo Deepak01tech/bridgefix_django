@@ -10,8 +10,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 
 def home(request):
-    # return render(request, 'home.html')
-    return JsonResponse({"message": "Welcome to the E-commerce API"})
+    return render(request, 'home.html')
+    # return JsonResponse({"message": "Welcome to the E-commerce API"})
 
 # @require_POST
 def user_login(request):
@@ -74,13 +74,13 @@ def signup(request):
             })
 
         User.objects.create_user(username=username, password=password)
-        return redirect("login")  # go to login page after signup
+        return redirect("user_login")  # go to login page after signup
 
     # GET request → show signup page
     return render(request, "signup.html")
 
 @login_required
-@require_POST
+# @require_POST
 def user_logout(request):
     logout(request)
     return JsonResponse({

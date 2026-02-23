@@ -19,7 +19,7 @@ urlpatterns = [
     path ('sellers/<int:pk>/remove_product/<int:product_id>/', views.remove_product_from_seller, name='remove_product_from_seller'),
     path ('managers/', views.manager_approval, name='manager_approve_products'),
     path('login/', views.user_login, name='user_login'),
-    path('logout/', views.user_logout, name='user_logout'),
+    path('logout/', views.user_logout, name='logout'),
     path('signup/', views.signup, name='user_signup'),
     path('', views.home, name='home'),
 ]

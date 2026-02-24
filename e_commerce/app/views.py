@@ -100,39 +100,47 @@ def product_detail(request, pk):
     try:
         product = Product.objects.get(pk=pk)
         data = {"id": product.id, "name": product.name, "description": product.description, "price": str(product.price), "stock": product.stock}
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "product_detail.html", {"product": product})
     except Product.DoesNotExist:
-        return JsonResponse({"error": "Product not found"}, status=404)
+        # return JsonResponse({"error": "Product not found"}, status=404)
+        return render(request, "product_detail.html", {"error": "Product not found"})
     
 @login_required
 def order_list(request):
     orders = Order.objects.all()
     data = [{"id": o.id, "product": o.product.name, "quantity": o.quantity, "total_price": str(o.total_price)} for o in orders]
-    return JsonResponse(data, safe=False)
+    # return JsonResponse(data, safe=False)
+    return render(request, "order_list.html", {"orders": orders})
 
 @login_required
 def order_detail(request, pk):
     try:
         order = Order.objects.get(pk=pk)
         data = {"id": order.id, "product": order.product.name, "quantity": order.quantity, "total_price": str(order.total_price)}
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "order_detail.html", {"order": order})
     except Order.DoesNotExist:
-        return JsonResponse({"error": "Order not found"}, status=404)
+        # return JsonResponse({"error": "Order not found"}, status=404)
+        return render(request, "order_detail.html", {"error": "Order not found"})
     
 @login_required
 def customer_list(request):
     customers = Customer.objects.all()
     data = [{"id": c.id, "name": c.name, "email": c.email} for c in customers]
-    return JsonResponse(data, safe=False)
+    # return JsonResponse(data, safe=False)
+    return render(request, "customer_list.html", {"customers": customers})
 
 @login_required
 def customer_detail(request, pk):
     try:
         customer = Customer.objects.get(pk=pk)
         data = {"id": customer.id, "name": customer.name, "email": customer.email}
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "customer_detail.html", {"customer": customer})
     except Customer.DoesNotExist:
-        return JsonResponse({"error": "Customer not found"}, status=404)
+        # return JsonResponse({"error": "Customer not found"}, status=404)
+        return render(request, "customer_detail.html", {"error": "Customer not found"})
 @login_required   
 def cart_detail(request):
     
@@ -143,21 +151,25 @@ def cart_detail(request):
             "customer": cart.customer.name,
             "products": [{"name": item.product.name, "quantity": item.quantity} for item in items]
         }
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "cart_detail.html", {"cart": cart, "items": items})
     else:
-        return JsonResponse({"error": "Cart not found"}, status=404)
+        # return JsonResponse({"error": "Cart not found"}, status=404)
+        return render(request, "cart_detail.html", {"error": "Cart not found"})
     
 @login_required   
 def add_to_cart(request, product_id):
     # get product using filter
     product = Product.objects.filter(id=product_id).first()
     if not product:
-        return JsonResponse({"error": "Product not found"}, status=404)
+        # return JsonResponse({"error": "Product not found"}, status=404)
+        return render(request, "add_to_cart.html", {"error": "Product not found"})
 
     # get customer linked to logged-in user
     customer = Customer.objects.filter(user=request.user).first()
     if not customer:
-        return JsonResponse({"error": "Customer not found"}, status=404)
+        # return JsonResponse({"error": "Customer not found"}, status=404)
+        return render(request, "add_to_cart.html", {"error": "Customer not found"})
 
     # get or create cart
     cart = Cart.objects.filter(customer=customer).first()
@@ -177,69 +189,81 @@ def add_to_cart(request, product_id):
             quantity=1
         )
 
-    return JsonResponse({
-        "message": "Product added to cart",
-        "product": product.name
-    })
+    # return JsonResponse({
+    #     "message": "Product added to cart",
+    #     "product": product.name
+    # })
+    return render(request, "add_to_cart.html", {"message": f"Product '{product.name}' added to cart"})
 
 @login_required
 def remove_from_cart(request, product_id):
     # get product
     product = Product.objects.filter(id=product_id).first()
     if not product:
-        return JsonResponse({"error": "Product not found"}, status=404)
+        # return JsonResponse({"error": "Product not found"}, status=404)
+        return render(request, "remove_from_cart.html", {"error": "Product not found"})
 
     # get customer of logged-in user
     customer = Customer.objects.filter(user=request.user).first()
     if not customer:
-        return JsonResponse({"error": "Customer not found"}, status=404)
+        # return JsonResponse({"error": "Customer not found"}, status=404)
+        return render(request, "remove_from_cart.html", {"error": "Customer not found"})
 
     # get cart
     cart = Cart.objects.filter(customer=customer).first()
     if not cart:
-        return JsonResponse({"error": "Cart not found"}, status=404)
+        # return JsonResponse({"error": "Cart not found"}, status=404)
+        return render(request, "remove_from_cart.html", {"error": "Cart not found"})
 
     # get cart item
     cart_item = CartItem.objects.filter(cart=cart, product=product).first()
     if not cart_item:
-        return JsonResponse({"error": "Product not in cart"}, status=404)
+        # return JsonResponse({"error": "Product not in cart"}, status=404)
+        return render(request, "remove_from_cart.html", {"error": "Product not in cart"})
 
     # remove item from cart
     cart_item.delete()
 
-    return JsonResponse({
-        "message": "Product removed from cart",
-        "product": product.name
-    })
+    # return JsonResponse({
+    #     "message": "Product removed from cart",
+    #     "product": product.name
+    # })
+    return render(request, "remove_from_cart.html", {"message": f"Product '{product.name}' removed from cart"})
 
 @login_required
 def user_list(request):
     users = User.objects.all()
     data = [{"id": u.id, "username": u.username, "email": u.email} for u in users]
-    return JsonResponse(data, safe=False)
+    # return JsonResponse(data, safe=False)
+    return render(request, "user_list.html", {"users": users})
 
 @login_required
 def user_detail(request, pk):
     try:
         user_obj = User.objects.get(pk=pk)
         data = {"id": user_obj.id, "username": user_obj.username, "email": user_obj.email}
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "user_detail.html", {"user": user_obj})
     except User.DoesNotExist:
-        return JsonResponse({"error": "User not found"}, status=404)
+        # return JsonResponse({"error": "User not found"}, status=404)
+        return render(request, "user_detail.html", {"error": "User not found"})
 @login_required  
 def seller_list(request):
     sellers = Seller.objects.all()
     data = [{"id": s.id, "name": s.name, "email": s.email} for s in sellers]
-    return JsonResponse(data, safe=False)
+    # return JsonResponse(data, safe=False)
+    return render(request, "seller_list.html", {"sellers": sellers})
 
 @login_required
 def seller_detail(request, pk):
     try:
         seller = Seller.objects.get(pk=pk)
         data = {"id": seller.id, "name": seller.name, "email": seller.email}
-        return JsonResponse(data)
+        # return JsonResponse(data)
+        return render(request, "seller_detail.html", {"seller": seller})
     except Seller.DoesNotExist:
-        return JsonResponse({"error": "Seller not found"}, status=404)
+        # return JsonResponse({"error": "Seller not found"}, status=404)
+        return render(request, "seller_detail.html", {"error": "Seller not found"})
     
 @login_required  
 def seller_products(request, pk):
@@ -247,61 +271,71 @@ def seller_products(request, pk):
         seller = Seller.objects.get(pk=pk)
         products = seller.Products.all()
         data = [{"id": p.id, "name": p.name, "description": p.description, "price": str(p.price), "stock": p.stock} for p in products]
-        return JsonResponse(data, safe=False)
+        # return JsonResponse(data, safe=False)
+        return render(request, "seller_products.html", {"seller": seller, "products": products})
     except Seller.DoesNotExist:
-        return JsonResponse({"error": "Seller not found"}, status=404)
+        # return JsonResponse({"error": "Seller not found"}, status=404)
+        return render(request, "seller_products.html", {"error": "Seller not found"})
 
 @login_required
 def add_product_to_seller(request, pk):
     # get seller
     seller = Seller.objects.filter(pk=pk).first()
     if not seller:
-        return JsonResponse({"error": "Seller not found"}, status=404)
+        # return JsonResponse({"error": "Seller not found"}, status=404)
+        return render(request, "add_product_to_seller.html", {"error": "Seller not found"})
 
     # get product_id from request
     product_id = request.POST.get("product_id") or request.GET.get("product_id")
     if not product_id:
-        return JsonResponse({"error": "product_id is required"}, status=400)
+        # return JsonResponse({"error": "product_id is required"}, status=400)
+        return render(request, "add_product_to_seller.html", {"error": "product_id is required"})
 
     # get product
     product = Product.objects.filter(pk=product_id).first()
     if not product:
-        return JsonResponse({"error": "Product not found"}, status=404)
+        # return JsonResponse({"error": "Product not found"}, status=404)
+        return render(request, "add_product_to_seller.html", {"error": "Product not found"})
 
     # add product to seller
     seller.Products.add(product)   # assuming ManyToManyField
     seller.save()
 
-    return JsonResponse({
-        "message": "Product added to seller",
-        "seller": seller.name,
-        "product": product.name
-    })
+    # return JsonResponse({
+    #     "message": "Product added to seller",
+    #     "seller": seller.name,
+    #     "product": product.name
+    # })
+    return render(request, "add_product_to_seller.html", {"message": f"Product '{product.name}' added to seller '{seller.name}'"})
 
 @login_required
 def remove_product_from_seller(request, pk, product_id):
     # get seller
     seller = Seller.objects.filter(pk=pk).first()
     if not seller:
-        return JsonResponse({"error": "Seller not found"}, status=404)
+        # return JsonResponse({"error": "Seller not found"}, status=404)
+        return render(request, "remove_product_from_seller.html", {"error": "Seller not found"})
 
     # get product
     product = Product.objects.filter(pk=product_id).first()
     if not product:
-        return JsonResponse({"error": "Product not found"}, status=404)
+        # return JsonResponse({"error": "Product not found"}, status=404)
+        return render(request, "remove_product_from_seller.html", {"error": "Product not found"})
 
     # check if product belongs to seller
     if not seller.Products.filter(pk=product.pk).exists():
-        return JsonResponse({"error": "Product not assigned to this seller"}, status=404)
+        # return JsonResponse({"error": "Product not assigned to this seller"}, status=404)
+        return render(request, "remove_product_from_seller.html", {"error": "Product not assigned to this seller"})
 
     # remove product from seller
     seller.Products.remove(product)
 
-    return JsonResponse({
-        "message": "Product removed from seller",
-        "seller": seller.name,
-        "product": product.name
-    })
+    # return JsonResponse({
+    #     "message": "Product removed from seller",
+    #     "seller": seller.name,
+    #     "product": product.name
+    # })
+    return render(request, "remove_product_from_seller.html", {"message": f"Product '{product.name}' removed from seller '{seller.name}'"})
 
 @login_required
 def manager_approval(request):

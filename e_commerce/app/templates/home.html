@@ -3,7 +3,15 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>Welcome to the E-commerce API</h1>
-<p>Use the API endpoints to manage products, orders, and users.</p>
+<h1>Welcome to the E-commerce Store</h1>
+<p>Browse products, manage your cart, and place orders easily.</p>
+
+<hr>
+
+<ul>
+    <li><a href="{% url 'product_list' %}">View Products</a></li>
+    <li><a href="{% url 'cart' %}">View Cart</a></li>
+    <li><a href="{% url 'orders' %}">My Orders</a></li>
+</ul>
 
 {% endblock %}

@@ -74,9 +74,9 @@ def signup(request):
             })
 
         User.objects.create_user(username=username, password=password)
-        return redirect("user_login")  # go to login page after signup
+        return redirect("user_login")  
 
-    # GET request → show signup page
+   
     return render(request, "signup.html")
 
 @login_required
@@ -87,7 +87,7 @@ def user_logout(request):
     #     "message": "Logged out successfully",
     #     "status": "success"
     # })
-    return redirect("home")  # change 'home' to your home url name
+    return redirect("home")  
 @login_required
 def product_list(request):
     products = Product.objects.all()
@@ -171,12 +171,12 @@ def add_to_cart(request, product_id):
         # return JsonResponse({"error": "Customer not found"}, status=404)
         return render(request, "add_to_cart.html", {"error": "Customer not found"})
 
-    # get or create cart
+  
     cart = Cart.objects.filter(customer=customer).first()
     if not cart:
         cart = Cart.objects.create(customer=customer)
 
-    # check if item already in cart
+  
     cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
     if cart_item:
@@ -277,36 +277,75 @@ def seller_products(request, pk):
         # return JsonResponse({"error": "Seller not found"}, status=404)
         return render(request, "seller_products.html", {"error": "Seller not found"})
 
+
 @login_required
-def add_product_to_seller(request, pk):
-    # get seller
+def add_product_to_seller(request, pk):             
     seller = Seller.objects.filter(pk=pk).first()
     if not seller:
-        # return JsonResponse({"error": "Seller not found"}, status=404)
         return render(request, "add_product_to_seller.html", {"error": "Seller not found"})
 
-    # get product_id from request
-    product_id = request.POST.get("product_id") or request.GET.get("product_id")
-    if not product_id:
-        # return JsonResponse({"error": "product_id is required"}, status=400)
-        return render(request, "add_product_to_seller.html", {"error": "product_id is required"})
+    # OPTIONAL: ensure only seller owner can add products
+    if seller.user != request.user:
+        return render(request, "add_product_to_seller.html", {"error": "Not allowed"})
 
-    # get product
-    product = Product.objects.filter(pk=product_id).first()
-    if not product:
-        # return JsonResponse({"error": "Product not found"}, status=404)
-        return render(request, "add_product_to_seller.html", {"error": "Product not found"})
+    products = Product.objects.all()
 
-    # add product to seller
-    seller.Products.add(product)   # assuming ManyToManyField
-    seller.save()
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
 
-    # return JsonResponse({
-    #     "message": "Product added to seller",
-    #     "seller": seller.name,
-    #     "product": product.name
-    # })
-    return render(request, "add_product_to_seller.html", {"message": f"Product '{product.name}' added to seller '{seller.name}'"})
+        if not product_id:
+            return render(request, "add_product_to_seller.html", {
+                "error": "Product is required",
+                "products": products
+            })
+
+        product = Product.objects.filter(pk=product_id).first()
+        if not product:
+            return render(request, "add_product_to_seller.html", {
+                "error": "Product not found",
+                "products": products
+            })
+
+        seller.Products.add(product)
+
+        return render(request, "add_product_to_seller.html", {
+            "message": f"Product '{product.name}' added to seller '{seller.name}'",
+            "products": products
+        })
+
+    return render(request, "add_product_to_seller.html", {"products": products})
+
+
+# @login_required
+# def add_product_to_seller(request, pk):
+#     # get seller
+#     seller = Seller.objects.filter(pk=pk).first()
+#     if not seller:
+#         # return JsonResponse({"error": "Seller not found"}, status=404)
+#         return render(request, "add_product_to_seller.html", {"error": "Seller not found"})
+
+#     # get product_id from request
+#     product_id = request.POST.get("product_id") or request.GET.get("product_id")
+#     if not product_id:
+#         # return JsonResponse({"error": "product_id is required"}, status=400)
+#         return render(request, "add_product_to_seller.html", {"error": "product_id is required"})
+
+#     # get product
+#     product = Product.objects.filter(pk=product_id).first()
+#     if not product:
+#         # return JsonResponse({"error": "Product not found"}, status=404)
+#         return render(request, "add_product_to_seller.html", {"error": "Product not found"})
+
+#     # add product to seller
+#     seller.Products.add(product)   # assuming ManyToManyField
+#     seller.save()
+
+#     # return JsonResponse({
+#     #     "message": "Product added to seller",
+#     #     "seller": seller.name,
+#     #     "product": product.name
+#     # })
+#     return render(request, "add_product_to_seller.html", {"message": f"Product '{product.name}' added to seller '{seller.name}'"})
 
 @login_required
 def remove_product_from_seller(request, pk, product_id):

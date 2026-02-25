@@ -1,5 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}cart details{% endblock %}
+{% block title %}Cart Details{% endblock %}
 
 {% block content %}
+<h1>Your Cart</h1>
+
+{% if cart_items %}
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+    </tr>
+
+    {% for item in cart_items %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.product.price }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.total_price }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Grand Total: {{ grand_total }}</h3>
+
+<a href="{% url 'checkout' %}">
+    <button>Proceed to Checkout</button>
+</a>
+
+{% else %}
+<p>Your cart is empty 🛒</p>
+<a href="{% url 'product_list' %}">Go to Products</a>
+{% endif %}
+
+{% endblock %}

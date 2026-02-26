@@ -3,28 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>signup</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Signup</h2>
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Signup</button>
-        <!-- <button type="submit">login</button> -->
-    </form>
+<body class="bg-light">
 
-    {% if error %}
-      <p style="color:red">{{ error }}</p>
-    {% endif %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow p-4" style="width: 100%; max-width: 420px;">
 
-    {% if success %}
-      <p style="color:green">{{ success }}</p>
-    {% endif %}
-    
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <h3 class="text-center mb-4">Create Account</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Create a password" required>
+            </div>
+
+            <!-- ROLE FIELD -->
+            <div class="mb-3">
+                <label class="form-label">Signup as</label>
+                <select name="role" class="form-select" required>
+                    <option value="customer">Customer</option>
+                    <option value="seller">Seller</option>
+                </select>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">Signup</button>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary">
+                    Already have an account? Login
+                </a>
+            </div>
+        </form>
+
+        {% if error %}
+          <div class="alert alert-danger mt-3" role="alert">
+              {{ error }}
+          </div>
+        {% endif %}
+
+        {% if success %}
+          <div class="alert alert-success mt-3" role="alert">
+              {{ success }}
+          </div>
+        {% endif %}
+
+    </div>
+</div>
+
 </body>
 </html>

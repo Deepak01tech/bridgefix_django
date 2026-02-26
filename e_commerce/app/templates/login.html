@@ -4,25 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+<body class="bg-light">
 
-    {% if error %}
-      <p style="color:red">{{ error }}</p>
-    {% endif %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+        
+        <h3 class="text-center mb-4">Login</h3>
 
-    {% if success %}
-      <p style="color:green">{{ success }}</p>
-    {% endif %}
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="{% url 'signup' %}" class="btn btn-outline-secondary">Create Account</a>
+            </div>
+        </form>
+
+        {% if error %}
+          <div class="alert alert-danger mt-3" role="alert">
+              {{ error }}
+          </div>
+        {% endif %}
+
+        {% if success %}
+          <div class="alert alert-success mt-3" role="alert">
+              {{ success }}
+          </div>
+        {% endif %}
+
+    </div>
+</div>
+
 </body>
 </html>

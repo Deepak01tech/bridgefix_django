@@ -16,18 +16,20 @@ urlpatterns = [
     path('customers/', views.customer_list, name='customer_list'),
     path('customers/<int:pk>/', views.customer_detail, name='customer_detail'),
 
-    path('orders/', views.order_list, name='orders'),
+    path('orders/', views.order_list, name='order_list'),
     path('orders/<int:pk>/', views.order_detail, name='order_detail'),
    
-    path('cart/', views.cart_detail, name='cart'),
+    path('cart/', views.cart_detail, name='cart_detail'),
     path('cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
     
     path('sellers/', views.seller_list, name='seller_list'),
     path('sellers/<int:pk>/', views.seller_detail, name='seller_detail'),
-    path ('sellers/<int:pk>/products/', views.seller_products, name='seller_products'),
-    path ('sellers/<int:pk>/add_product/', views.add_product_to_seller, name='add_product'),
-    path ('sellers/<int:pk>/remove_product/<int:product_id>/', views.remove_product_from_seller, name='remove_product_from_seller'),
+
+    path('seller/products/', views.seller_products, name='seller_products'),
+    path('seller/add_product/', views.add_product, name='add_product'),
+    path('products/<int:pk>/edit/', views.edit_product, name='edit_product'),
+    path('seller/remove_product/<int:product_id>/', views.remove_product_from_seller, name='remove_product_from_seller'),
     
     
    

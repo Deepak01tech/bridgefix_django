@@ -2,70 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Site{% endblock %}</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>{% block title %}E-Commerce{% endblock %}</title>
+
+    <!-- ✅ Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="/">MySite</a>
+    <a class="navbar-brand" href="{% url 'home' %}">E-Commerce</a>
 
-    <div class="collapse navbar-collapse">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li> -->
-        <li><a class="nav-link" href="{% url 'product_list' %}">View Products</a></li>
-        <li><a class="nav-link" href="{% url 'cart' %}">View Cart</a></li>
-        <li><a class="nav-link" href="{% url 'orders' %}">My Orders</a></li>
 
         {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-          </li>
-          <li class="nav-item">
-            
-             <a class="nav-link" href="{% url 'add_product' user.id %}">Add Product</a>
-          </li>
+
+            {% if user.role == "customer" %}
+                <!-- CUSTOMER NAV -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'home' %}">Products</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'cart_detail' %}">Cart</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'order_list' %}">Orders</a>
+                </li>
+
+            {% elif user.role == "seller" %}
+                <!-- SELLER NAV -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'seller_products'  %}">My Products</a>
+                </li>
+                
+
+            {% elif user.role == "manager" %}
+                <!-- MANAGER NAV -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'manager_approve_products' %}">Dashboard</a>
+                </li>
+            {% endif %}
+
+            <!-- LOGOUT -->
+            <li class="nav-item">
+              <a class="nav-link text-warning" href="{% url 'logout' %}">Logout</a>
+            </li>
+
         {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'signup' %}">Signup</a>
-          </li>
+            <!-- NOT LOGGED IN -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+            </li>
         {% endif %}
+
       </ul>
     </div>
   </div>
 </nav>
 
+<!-- ✅ Page Content -->
 <div class="container mt-4">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </div>
-  
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<!-- ✅ Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

@@ -1,17 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Manager Approval{% endblock %}
 
-
-<h2>Manager Approval</h2>
-
-<form method="post">
-    {% csrf_token %}
-    <input type="number" name="seller_id" placeholder="Enter Seller ID">
-    <button type="submit">Approve Seller</button>
-</form>
+{% block content %}
+<h2>Approve Products</h2>
 
 {% if error %}
-  <p style="color:red">{{ error }}</p>
+<p style="color:red;">{{ error }}</p>
 {% endif %}
 
 {% if success %}
-  <p style="color:green">{{ success }}</p>
+<p style="color:green;">{{ success }}</p>
 {% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <label>Select Product to Approve:</label><br>
+    <select name="product_id">
+        <option value="">-- Select Product --</option>
+        {% for product in products %}
+            <option value="{{ product.id }}">
+                {{ product.name }} (Seller: {{ product.seller.username }})
+            </option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <button type="submit">Approve Product</button>
+</form>
+
+{% if not products %}
+<p>All products are approved ✅</p>
+{% endif %}
+
+{% endblock %}

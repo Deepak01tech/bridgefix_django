@@ -1,13 +1,23 @@
-.venv
-node_modules/
-.env
-*.log
-__pycache__/
-
+# Virtual environments
 venv/
-*.pyc
+.venv/
 
-db.sqlite3
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# SQLite DB (in any project folder)
+**/db.sqlite3
+
+# Media & collected static files
 media/
 staticfiles/
-static/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log

@@ -275,7 +275,8 @@ def checkout(request):
         return render(request, "checkout.html", {"cart_items": [], "grand_total": 0})
 
     cart_items = cart.items.all()
-    grand_total = sum(item.total_price for item in cart_items)
+    # grand_total = sum(item.total_price for item in cart_items)
+    grand_total=sum(item.product.price * item.quantity for item in cart_items)
 
     if request.method == "POST":
        
@@ -305,7 +306,7 @@ def checkout(request):
 def user_detail(request, pk):
     try:
         user_obj = User.objects.get(pk=pk)
-        data = {"id": user_obj.id, "username": user_obj.username, "email": user_obj.email}
+        # data = {"id": user_obj.id, "username": user_obj.username, "email": user_obj.email}
         # return JsonResponse(data)
         return render(request, "user_detail.html", {"user": user_obj})
     except User.DoesNotExist:

@@ -16,9 +16,13 @@
 
     {% for item in cart_items %}
     <tr>
-        {#<!-- <td>{% if product.image %}
-                        <img src="{{ product.image.url }}" width="150">
-                        {% endif %}</td> -->#}
+        <td>
+            {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" width="150">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
         <td>{{ item.product.name }}</td>
         <td>{{ item.product.price }}</td>
         <td>{{ item.quantity }}</td>

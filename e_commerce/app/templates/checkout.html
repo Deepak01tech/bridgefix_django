@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-3">Checkout</h2>
+
+    {% if message %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if cart_items %}
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4 class="text-end">Grand Total: ₹{{ grand_total }}</h4>
+
+        <hr>
+
+        <!-- Checkout Form -->
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Delivery Address</label>
+                <textarea name="address" class="form-control" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Payment Method</label>
+                <select name="payment_method" class="form-select" required>
+                    <option value="">-- Select Payment Method --</option>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="upi">UPI</option>
+                    <option value="card">Debit / Credit Card</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Place Order
+            </button>
+
+            <a href="{% url 'cart_detail' %}" class="btn btn-secondary ms-2">
+                Back to Cart
+            </a>
+        </form>
+
+    {% else %}
+        <p>Your cart is empty 🛒</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Go to Products</a>
+    {% endif %}
+
+</div>
+{% endblock %}

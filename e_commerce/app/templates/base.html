@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}E-Commerce{% endblock %}</title>
+    <title>{% block title %}E-Commerce hi{{ user.username} }{% endblock %}</title>
 
     <!-- ✅ Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,6 +21,11 @@
       <ul class="navbar-nav ms-auto">
 
         {% if user.is_authenticated %}
+
+             <!-- ✅ USERNAME SHOWN HERE -->
+            <li class="nav-item">
+              <span class="nav-link text-info">Hi, {{ user.username }}</span>
+            </li>
 
             {% if user.role == "customer" %}
                 <!-- CUSTOMER NAV -->
@@ -44,7 +49,7 @@
             {% elif user.role == "manager" %}
                 <!-- MANAGER NAV -->
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'manager_approve_products' %}">Dashboard</a>
+                  <a class="nav-link" href="{% url 'manager_approve_products' %}">Approve products</a>
                 </li>
             {% endif %}
 

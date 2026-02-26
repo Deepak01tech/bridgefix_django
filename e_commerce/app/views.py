@@ -160,22 +160,37 @@ def customer_detail(request, pk):
     except User.DoesNotExist:
         # return JsonResponse({"error": "Customer not found"}, status=404)
         return render(request, "customer_detail.html", {"error": "Customer not found"})
-@login_required   
+@login_required 
 def cart_detail(request):
-    
-    cart = Cart.objects.first()
+    # get cart of logged-in customer
+    cart = Cart.objects.filter(customer=request.user).first()
+
     if cart:
-        items = CartItem.objects.filter(cart=cart)
-        data = {
-            # "customer": cart.customer.name,
-            "customer": cart.customer.username,
-            "products": [{"name": item.product.name, "quantity": item.quantity} for item in items]
-        }
-        # return JsonResponse(data)
-        return render(request, "cart_detail.html", {"cart": cart, "items": items})
+        cart_items = cart.items.all()  # related_name="items"
     else:
-        # return JsonResponse({"error": "Cart not found"}, status=404)
-        return render(request, "cart_detail.html", {"error": "Cart not found"})
+        cart_items = []
+
+    grand_total = sum(item.product.price * item.quantity for item in cart_items)
+
+    return render(request, "cart_detail.html", {
+        "cart_items": cart_items,
+        "grand_total": grand_total,
+    })
+# def cart_detail(request):
+    
+#     cart = Cart.objects.first()
+#     if cart:
+#         items = CartItem.objects.filter(cart=cart)
+#         data = {
+#             # "customer": cart.customer.name,
+#             "customer": cart.customer.username,
+#             "products": [{"name": item.product.name, "quantity": item.quantity} for item in items]
+#         }
+#         # return JsonResponse(data)
+#         return render(request, "cart_detail.html", {"cart": cart, "items": items})
+#     else:
+#         # return JsonResponse({"error": "Cart not found"}, status=404)
+#         return render(request, "cart_detail.html", {"error": "Cart not found"})
     
 @login_required   
 def add_to_cart(request, product_id):
@@ -252,19 +267,39 @@ def remove_from_cart(request, product_id):
     # })
     return render(request, "remove_from_cart.html", {"message": f"Product '{product.name}' removed from cart"})
 
-def checkout(request):
-
-    # This is a placeholder for the checkout process
-    
-
-    return render(request, "checkout.html", {"message": "Checkout process not implemented yet"})
-
 @login_required
-def user_list(request):
-    users = User.objects.all()
-    data = [{"id": u.id, "username": u.username, "email": u.email} for u in users]
-    # return JsonResponse(data, safe=False)
-    return render(request, "user_list.html", {"users": users})
+def checkout(request):
+    cart = Cart.objects.filter(customer=request.user).first()
+
+    if not cart:
+        return render(request, "checkout.html", {"cart_items": [], "grand_total": 0})
+
+    cart_items = cart.items.all()
+    grand_total = sum(item.total_price for item in cart_items)
+
+    if request.method == "POST":
+       
+        cart.items.all().delete()  
+        return render(request, "checkout.html", {
+            "message": "Order placed successfully 🎉",
+            "cart_items": [],
+            "grand_total": 0
+        })
+
+    return render(request, "checkout.html", {
+        "cart_items": cart_items,
+        "grand_total": grand_total
+    })
+
+
+
+
+# @login_required
+# def user_list(request):
+#     users = User.objects.all()
+#     data = [{"id": u.id, "username": u.username, "email": u.email} for u in users]
+#     # return JsonResponse(data, safe=False)
+#     return render(request, "user_list.html", {"users": users})
 
 @login_required
 def user_detail(request, pk):
@@ -276,14 +311,14 @@ def user_detail(request, pk):
     except User.DoesNotExist:
         # return JsonResponse({"error": "User not found"}, status=404)
         return render(request, "user_detail.html", {"error": "User not found"})
-@login_required  
-def seller_list(request):
-    # sellers = Seller.objects.all()
-    sellers = User.objects.filter(role='seller')
-    # data = [{"id": s.id, "name": s.name, "email": s.email} for s in sellers]
-    data = [{"id": s.id, "username": s.username, "email": s.email} for s in sellers]
-    # return JsonResponse(data, safe=False)
-    return render(request, "seller_list.html", {"sellers": sellers})
+# @login_required  
+# def seller_list(request):
+#     # sellers = Seller.objects.all()
+#     sellers = User.objects.filter(role='seller')
+#     # data = [{"id": s.id, "name": s.name, "email": s.email} for s in sellers]
+#     data = [{"id": s.id, "username": s.username, "email": s.email} for s in sellers]
+#     # return JsonResponse(data, safe=False)
+#     return render(request, "seller_list.html", {"sellers": sellers})
 
 @login_required
 def seller_detail(request, pk):

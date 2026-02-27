@@ -10,7 +10,7 @@
     <tr>
         <th>Order ID</th>
         <th>Date</th>
-        <th>Status</th>
+        
         <th>Total Amount</th>
         <th>Details</th>
     </tr>
@@ -19,7 +19,8 @@
     <tr>
         <td>{{ order.id }}</td>
         <td>{{ order.created_at }}</td>
-        <td>{{ order.status }}</td>
+        {%comment%}{{ order.created_at|date:"Y-m-d H:i" }}{%endcomment%}
+        
         <td>{{ order.total_amount }}</td>
         <td>
             <a href="{% url 'order_detail' order.id %}">View</a>

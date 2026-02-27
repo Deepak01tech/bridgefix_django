@@ -10,8 +10,8 @@ from django.views.decorators.http import require_POST
 # from django.contrib.auth.models import User
 
 def home(request):
-    products = Product.objects.filter(is_approved=False)
-    # products = Product.objects.filter(is_approved=True)
+    # products = Product.objects.filter(is_approved=False)
+    products = Product.objects.filter(is_approved=True)
 
     return render(request, 'home.html',{ "products": products})
     # return JsonResponse({"message": "Welcome to the E-commerce API"})
@@ -123,8 +123,10 @@ def product_detail(request, pk):
 @login_required
 def order_list(request):
     orders = Order.objects.all()
+    # print(orders)
     data = [{"id": o.id, "product": o.product.name, "quantity": o.quantity, "total_price": str(o.total_price)} for o in orders]
     # return JsonResponse(data, safe=False)
+    print(data)
     return render(request, "order_list.html", {"orders": orders})
 
 @login_required
@@ -133,7 +135,7 @@ def order_detail(request, pk):
         order = Order.objects.get(pk=pk)
         data = {"id": order.id, "product": order.product.name, "quantity": order.quantity, "total_price": str(order.total_price)}
         # return JsonResponse(data)
-        return render(request, "order_detail.html", {"order": order})
+        return render(request, "order_detail.html", {"order": data})
     except Order.DoesNotExist:
         # return JsonResponse({"error": "Order not found"}, status=404)
         return render(request, "order_detail.html", {"error": "Order not found"})
@@ -410,7 +412,7 @@ def add_product(request):
         description = request.POST.get("description")
         image = request.FILES.get("image")
 
-        print("DEBUG:", name, price, stock)
+        # print("DEBUG:", name, price, stock)
 
         if not name or not price or not stock:
             return render(request, "add_product_to_seller.html", {
